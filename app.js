@@ -22,7 +22,9 @@ const port = process.env.PORT || 3000;
 
 // creating the routes for the js files
 const routes = require('./routes/index');
+const login = require('./routes/logins');
 const users = require('./routes/users');
+const logout = require('./routes/logouts');
 
 // intiating the app
 const app = express();
@@ -82,12 +84,20 @@ app.use((req, res, next)=>{
   // passportjs automatically sets the error messages into { error }
   // so we have to use the key word 'error'
   res.locals.error = req.flash('error');
+
+  // this is to tell node that
+  // if the user is present, then we can user the "user" to 
+  // execute some commands, if not the the value will ne null
+  res.locals.user = req.user || null;
+
   next();
 })
 
 // using routes for the express app
 app.use('/', routes);
 app.use('/users', users);
+app.use('/logins', login);
+app.use('/logouts', logout)
 
 // setting the server open
 app.listen(port, ()=>{
